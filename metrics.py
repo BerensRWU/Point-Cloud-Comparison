@@ -1,6 +1,5 @@
 import numpy as np
-from scipy.spatial.distance import cdist
-from scipy.spatial.distance import pdist
+from scipy.spatial.distance import cdist, pdist, squareform
 
 """
 Shape of the point clouds:
@@ -12,13 +11,9 @@ def gromov_wasserstein(pc1:np.ndarray, pc2:np.ndarray)->float:
     def dist_ecc_fast(ecc, u):
         return(np.mean(ecc <= u))
     
-    d1 = distance_matrix(pc1, pc1)
-    d2 = distance_matrix(pc2, pc2)
     out = 0
-    
-    ecc1 = d1.mean(0)
-    ecc2 = d2.mean(0)
-    
+    ecc1 = squareform(pdist(pc1)).mean(0)
+    ecc2 = squareform(pdist(pc2)).mean(0)
     unique_ecc = np.unique(np.concatenate((ecc1,ecc2)))
     for i in range(unique_ecc.shape[0] - 1):
         u = unique_ecc[i]
