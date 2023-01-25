@@ -28,10 +28,12 @@ def chamfer_distance(pc1:np.ndarray, pc2:np.ndarray)->float:
     
 def average_ratio(pc1:np.ndarray, pc2:np.ndarray, Dist_list:list)->float:
     d = cdist(pc1, pc2)
+    d0 = d.min(0)
+    d1 = d.min(1)
+    
     avr = 0
     for i,dist in enumerate(Dist_list):
-        avr += (i+1) * ((d.min(1) <= dist).sum()/pc1.shape[0] + (d.min(0) <= dist).sum()/pc2.shape[0])
-        
+        avr += (i+1) * ((d1 <= dist).sum()/pc1.shape[0] + (d0 <= dist).sum()/pc2.shape[0])
     return avr / (len(Dist_list)**2 + len(Dist_list))
     
 def ratio(pc1:np.ndarray, pc2:np.ndarray, thr_list = np.array([0.1, 0.5, 1, 2, 4]))->list:
